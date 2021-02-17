@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>计算颜色刺激值</title>
+<style type="text/css">
+    body{
+        background-color: #f5f6f7;
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+    }
+    .input{
+        padding: 10px 12px;
+        border: 1px solid #f5f6f7;
+        border-radius: 9px;
+        width: 100%;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        background-color: #f5f6f7;
+    }
+    
+    .input:hover{
+        outline:none;
+        box-shadow:  0 0 0 3px #BDE7FF;
+        border: 1px solid #EEEEEE;
+    }
+    .input:focus{
+        outline:none;
+        box-shadow:  0 0 0 1px #42A7FF,0 0 0 3px #BDE7FF;
+        border: 1px solid #EEEEEE;
+    }
+    input::-webkit-input-placeholder{
+        color:#999;
+        font-size: 14px;
+    }
+    input::-moz-placeholder{
+        color:#999;
+        font-size: 14px;
+    }
+    input:-moz-placeholder{
+        color:#999;
+        font-size: 14px;
+    }
+    input:-ms-input-placeholder{
+        color:#999;
+        font-size: 14px;
+    }
+    .form{
+        
+         display:flex;
+    }
+    #container{
+        width: 400px;
+        height: 100%;
+        margin: 80px auto;
+        padding: 40px 40px;
+        border-radius:15px;
+        background-color: #FFFFFF;
+        font-family: "Poppins", sans-serif;
+    }
+    #tri{
+        width: 100%;
+        height: 42px;
+        background-color: #06f;
+        color:#FFFFFF;
+        font-size: 15px;
+        font-weight: 400;
+        border-radius: 9px;
+        outline:none;
+        border: none;
+        margin-top: 18px;
+
+        -webkit-transition-property: background;
+        transition-property:background-color;
+        -webkit-transition-duration:0.12s;
+        transition-duration:0.12s;
+        -webkit-transition-timing-function: ease-out;
+        transition-timing-function: ease-out;
+        -webkit-transition-delay: 0s;
+        transition-delay:0s;
+    }
+    #tri:hover{
+        background-color: #1975FF;
+        cursor:pointer;
+        box-shadow:  0 0 0 0px #BDE7FF;
+    }
+    #tri:active{
+        box-shadow:  0 0 0 6px #FFFFFF;
+        -webkit-transition-property: box-shadow;
+        transition-property:box-shadow;
+        -webkit-transition-duration:0.25s;
+        transition-duration:0.25s;
+        -webkit-transition-timing-function: ease-out;
+        transition-timing-function: ease-out;
+        -webkit-transition-delay: 0s;
+        transition-delay:0s;
+    }
+    /* #tri:active{
+        background-color: #0061F2;
+        box-shadow:  0 0 0 6px #FFFFFF;
+        -webkit-transition-property: box-shadow;
+        transition-property:box-shadow;
+        -webkit-transition-duration:0.5s;
+        transition-duration:0.5s;
+        -webkit-transition-timing-function: ease-out;
+        transition-timing-function: ease-out;
+        -webkit-transition-delay: 0s;
+        transition-delay:0s;
+    }*/
+    #value{
+        font-family: "Poppins", sans-serif;
+        font-size: 36px;
+        line-height: 40px;
+        font-weight: 600;
+        text-align:center;
+        margin-top: 30px;
+    }
+    #alert{
+        font-family: "Poppins", sans-serif;
+        color: red;
+        font-size: 12px;
+        line-height: 15px;
+        margin-top: 10px;
+    }
+
+</style>
+</head>
+
+<script type="text/javascript">
+window.onload = function(){     //加载完页面所有信息后执行以下代码，若无该条语句，则<script>不能放在中间
+    var inp = document.querySelectorAll("input");   //获取所有input标签 
+
+    inp[3].onmousedown = function(){
+      
+        document.getElementById("tri").style.backgroundColor = "#0061F2";
+
+    }
+    inp[3].onmouseup = function(){
+      
+        document.getElementById("tri").style.backgroundColor = "#0066FF";
+    }
+
+    inp[3].onclick = function(){
+
+        if (document.getElementById("hsb_h").value.length==0||document.getElementById("hsb_s").value.length==0||document.getElementById("hsb_b").value.length==0) {
+            document.getElementById("alert").innerHTML = "输入不能为空";
+        }else{
+                    document.getElementById("alert").innerHTML = "";
+                }
+        
+
+        var h = document.getElementById("hsb_h").value; //获取色相值
+        var s = document.getElementById("hsb_s").value; //获取饱和度
+        var b = document.getElementById("hsb_b").value; //获取明度Number(inp[2].value);
+        
+        if (h>360||h<0){
+            document.getElementById("alert").innerHTML = "H的区间为0~360";
+        }
+        if (s>100||s<0){
+            document.getElementById("alert").innerHTML = "S的区间为0~100";
+        }
+        if (b>100||b<0){
+            document.getElementById("alert").innerHTML = "B的区间为0~100";
+        }
+
+        var h1 = h-0; //红色到黄色
+        var h2 = h-60; //黄色到绿色
+        var h3 = h-120; //绿色到青色
+        var h4 = h-180; //青色到蓝色
+        var h5 = h-240; //蓝色到红色
+        var arr = [0.007857, 0.008628, 0.009435, 0.010355, 0.011467, 0.012850, 0.014574, 0.016631, 0.018982, 0.021590, 0.024413, 0.027409, 0.030684, 0.034429, 0.038830, 0.044077, 0.050436, 0.057814, 0.065860, 0.074224, 0.082556, 0.090624, 0.098982, 0.108453, 0.119861, 0.134030, 0.151545, 0.172310, 0.196126, 0.222795, 0.252120, 0.284050, 0.319165, 0.358214, 0.401946, 0.451110, 0.505622, 0.565405, 0.631219, 0.703824, 0.783980, 0.872388, 0.967268, 1.065658, 1.164596, 1.261120, 1.355322, 1.442286, 1.526668, 1.606402, 1.681100, 1.750155, 1.813283, 1.870607, 1.922241, 1.968300, 2.008763, 2.043720, 2.073450, 2.098230, 2.118340, 2.133939, 2.145381, 2.153235, 2.158072, 2.160460, 2.160652, 2.158846, 2.155528, 2.151187, 2.146310, 2.141303, 2.135848, 2.129346, 2.121196, 2.110800, 2.097828, 2.082315, 2.064208, 2.043454, 2.019500, 1.994101, 1.965412, 1.932982, 1.895862, 1.853000, 1.803975, 1.749639, 1.691954, 1.632781, 1.573980, 1.516553, 1.460197, 1.404817, 1.351277, 1.296600, 1.243908, 1.192591, 1.142721, 1.094370, 1.047610, 1.002493, 0.959122, 0.918093, 0.879404, 0.843450, 0.810434, 0.780256, 0.752762, 0.727798, 0.705210, 0.684962, 0.667063, 0.651426, 0.637968, 0.626600, 0.617204, 0.609766, 0.604355, 0.601043, 0.599900, 0.600996, 0.604115, 0.608895, 0.614977, 0.622000, 0.629725, 0.638265, 0.647795, 0.658482, 0.670500, 0.683857, 0.698424, 0.714162, 0.731033, 0.749000, 0.768065, 0.788094, 0.808843, 0.830066, 0.851520, 0.873029, 0.894604, 0.916277, 0.938082, 0.960050, 0.982182, 1.004357, 1.026427, 1.048244, 1.069660, 1.090475, 1.111038, 1.131121, 1.150898, 1.170440, 1.189768, 1.208854, 1.227702, 1.246316, 1.264700, 1.282865, 1.300820, 1.318563, 1.336070, 1.353400, 1.370484, 1.387360, 1.404069, 1.420652, 1.437150, 1.453541, 1.469816, 1.485961, 1.501962, 1.517800, 1.533456, 1.548896, 1.564069, 1.578923, 1.593400, 1.607453, 1.620860, 1.634139, 1.647229, 1.668750, 1.671998, 1.683668, 1.694995, 1.705851, 1.716200, 1.726011, 1.735303, 1.743979, 1.752123, 1.759700, 1.766705, 1.773097, 1.778810, 1.783783, 1.787950, 1.791271, 1.793746, 1.795413, 1.796258, 1.796300, 1.795517, 1.793901, 1.791486, 1.788308, 1.784400, 1.779806, 1.774458, 1.768227, 1.761175, 1.752600, 1.742982, 1.732201, 1.720368, 1.707597, 1.694000, 1.679652, 1.664491, 1.648386, 1.631260, 1.613000, 1.593546, 1.572990, 1.551454, 1.529063, 1.505940, 1.482144, 1.457645, 1.432435, 1.406503, 1.379840, 1.352504, 1.324501, 1.295746, 1.266154, 1.235640, 1.204177, 1.171929, 1.139099, 1.105888, 1.072500, 1.039008, 1.005514, 0.972261, 0.939492, 0.907450, 0.876322, 0.846043, 0.816475, 0.787483, 0.758930, 0.730789, 0.703121, 0.675922, 0.649190, 0.622920, 0.597103, 0.571761, 0.546936, 0.522671, 0.499010, 0.475964, 0.453547, 0.431802, 0.410772, 0.390500, 0.371021, 0.352307, 0.334313, 0.316992, 0.300300, 0.284218, 0.269749, 0.253881, 0.239602, 0.225900, 0.212763, 0.200185, 0.188164, 0.176696, 0.165780, 0.155398, 0.145550, 0.135897, 0.127531, 0.119400, 0.111864, 0.104881, 0.098406, 0.092395, 0.086800, 0.081608, 0.076783, 0.072252, 0.067939, 0.063770, 0.059688, 0.055713, 0.051883, 0.048239, 0.044820, 0.041633, 0.038654, 0.035878, 0.033299, 0.030910, 0.028708, 0.026685, 0.024829, 0.023126, 0.021563, 0.020134, 0.018827, 0.017625, 0.016509, 0.015461, 0.014468, 0.013528, 0.012643, 0.011813, 0.011040, 0.010321, 0.009649, 0.009021, 0.008433, 0.007881, 0.007363, 0.006877, 0.006421, 0.005994, 0.005593, 0.005218, 0.004867, 0.004538, 0.004232, 0.003946, 0.003681, 0.003434, 0.003204, 0.002990, 0.002789, 0.002601, 0.002425, 0.002260, 0.002105, 0.001960, 0.001832, 0.001704, 0.001590, 0.001478, 0.001379, 0.001279, 0.001188, 0.001102, 0.001022, 0.000948, 0.000878, 0.000813, 0.000753, 0.000697, 0.000645, 0.000598, 0.000554, 0.000513, 0.000476, 0.000442, 0.000410, 0.000381, 0.000355, 0.000331, 0.000309, 0.000289, 0.000270, 0.000253, 0.000237, 0.000223, 0.000209, 0.000197, 0.000185, 0.000174, 0.000163, 0.000153, 0.000143, 0.000133, 0.000123, 0.000114, 0.000104, 0.000094, 0.000084, 0.000074, 0.000064, 0.000054, 0.000043, 0.000033, 0.000022, 0.000012]; //不同波长的RGB刺激值和
+
+
+        if (h<60) {
+
+            var w = 612-h1*42/60; //获取红色到黄色的波长
+            wl = Math.round(w-380); //换算成波长数组排序
+            t1 = arr[wl] * 100; //刺激值乘100
+
+            } else if (h<120) {
+
+                var w = 570-h2*35/60; //获取黄色到绿色的波长
+                wl = Math.round(w-380); //换算成波长数组排序
+                t1 = arr[wl] * 100; //刺激值乘100
+                
+                } else if (h<180) {
+
+                    var w = 535-h3*47/60; //获取绿色到青色的波长
+                    wl = Math.round(w-380); //换算成波长数组排序
+                    t1 = arr[wl] * 100; //刺激值乘100
+                    
+                    } else if (h<240) {
+
+                        var w = 488-h4*22/60; //获取青色到蓝色的波长
+                        wl = Math.round(w-380); //换算成波长数组排序
+                        t1 = arr[wl] * 100; //刺激值乘100
+                        
+                        } else if (h<=360) {
+
+                            var w5 = 436-h5*56/120; //获取蓝色到红色的波长
+                            var w6 = 780-h5*168/120;
+                            wl5 = Math.round(w5-380); //换算成波长数组排序
+                            wl6 = Math.round(w6-380); //换算成波长数组排序
+                            t1 = arr[wl5] * 100 + arr[wl6] * 100; //刺激值乘100
+
+                            }
+
+            
+            s1 = 1-s/100;
+            t2 = 477-t1;
+            t3 = 477-t2*s/100;
+            tw = 477 - t3*b/100
+            
+
+            if (document.getElementById("hsb_h").value.length==0||document.getElementById("hsb_s").value.length==0||document.getElementById("hsb_b").value.length==0) {
+            document.getElementById("alert").innerHTML = "输入不能为空";
+            } else{
+                document.getElementById("value").innerHTML = Math.round(tw);
+
+            }
+        
+        
+    }
+    
+}
+</script>
+<body>
+
+    <div id="container">   
+        <div class="form" >
+            <input class="input" id="hsb_h" type="text" size='6' placeholder="H" max="360">
+        
+            <input class="input" id="hsb_s" type="text" size='6' placeholder="S" max="100" style="margin: 0 15px;">
+        
+            <input class="input" id="hsb_b" type="text" size='6' placeholder="B" max="100">
+        </div>
+        <div id="alert"></div>
+    <input id="tri" type="button" value="计算刺激值">
+
+    <div id="value">---</div>
+    </div>
+</body>
+</html>
